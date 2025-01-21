@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحلل الروحاني المطور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Amiri', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 1200px;
+            margin: 20px auto;
+        }
+
+        .matrix-8x8 {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            width: 600px;
+            height: 600px;
+            margin: 20px auto;
+            border: 2px solid #0f0;
+            background-color: rgba(0, 255, 0, 0.05);
+        }
+
+        .matrix-cell {
+            width: 75px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #0f0;
+            transition: all 0.3s;
+            cursor: pointer;
+            padding: 5px;
+            text-align: center;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .matrix-cell:hover {
+            background-color: rgba(0, 255, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .selected {
+            background-color: rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 15px #0f0;
+        }
+
+        .button-container {
+            margin: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .analysis-button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: linear-gradient(45deg, #0a0, #0f0);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .analysis-button:hover {
+            box-shadow: 0 0 20px #0f0;
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            background-color: rgba(0, 255, 0, 0.05);
+        }
+
+        #inputText {
+            width: 100%;
+            height: 100px;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: rgba(0, 255, 0, 0.05);
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Amiri', Arial, sans-serif;
+            resize: vertical;
+        }
+
+        .glow {
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px #0f0;
+            }
+            to {
+                box-shadow: 0 0 20px #0f0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <textarea id="inputText" placeholder="أدخل النص للتحليل الروحاني المقدس..."></textarea>
+
+        <div class="button-container">
+            <button class="analysis-button" onclick="startAnalysis()">التحليل الإلهي</button>
+            <button class="analysis-button" onclick="resetAnalysis()">تطهير</button>
+            <button class="analysis-button" onclick="generateWisdom()">استخراج حكمة</button>
+            <button class="analysis-button" onclick="generateDivineWord()">كلمة إلهية</button>
+        </div>
+
+        <div id="matrix8x8" class="matrix-8x8"></div>
+        <div id="analysisResults" class="result-section"></div>
+    </div>
+
+    <script>
+        // تعريف المصفوفات
+        const wisdomArray = [
+            { text: "من عرف نفسه فقد عرف ربه", category: "معرفة" },
+            { text: "الصبر مفتاح الفرج", category: "صبر" }
+            // ... باقي الحكم
+        ];
+
+        const divineWords = [
+            "الرحمة", "المحبة", "السلام", "النور", "الهداية"
+            // ... باقي الكلمات الإلهية
+        ];
+
+        let selectedCells = [];
+        let currentContent = [];
+
+        function initializeMatrix() {
+            const matrix = document.getElementById('matrix8x8');
+            matrix.innerHTML = '';
+            
+            for (let i = 0; i < 64; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'matrix-cell';
+                cell.setAttribute('data-index', i);
+                cell.onclick = () => cellClick(i);
+                matrix.appendChild(cell);
+                currentContent[i] = '';
+            }
+        }
+
+        function cellClick(index) {
+            const cell = document.querySelector(`[data-index="${index}"]`);
+            cell.classList.toggle('selected');
+            
+            if (cell.classList.contains('selected')) {
+                const randomChoice = Math.random();
+                let content;
+                
+                if (randomChoice < 0.5) {
+                    content = wisdomArray[Math.floor(Math.random() * wisdomArray.length)].text;
+                } else {
+                    content = divineWords[Math.floor(Math.random() * divineWords.length)];
+                }
+                
+                cell.textContent = content;
+                currentContent[index] = content;
+                showAnalysis(content);
+            } else {
+                cell.textContent = '';
+                currentContent[index] = '';
+            }
+        }
+
+        function showAnalysis(content) {
+            const results = document.getElementById('analysisResults');
+            const analysis = `
+                <h3>تحليل المحتوى:</h3>
+                <p>النص: ${content}</p>
+                <p>عدد الحروف: ${content.length}</p>
+                <p>عدد الكلمات: ${content.split(' ').length}</p>
+                <p>التصنيف: ${getContentCategory(content)}</p>
+            `;
+            results.innerHTML = analysis;
+        }
+
+        function getContentCategory(content) {
+            const wisdom = wisdomArray.find(w => w.text === content);
+            return wisdom ? wisdom.category : "كلمة إلهية";
+        }
+
+        function generateWisdom() {
+            const wisdom = wisdomArray[Math.floor(Math.random() * wisdomArray.length)];
+            document.getElementById('inputText').value = wisdom.text;
+        }
+
+        function generateDivineWord() {
+            const word = divineWords[Math.floor(Math.random() * divineWords.length)];
+            document.getElementById('inputText').value = word;
+        }
+
+        function startAnalysis() {
+            resetAnalysis();
+            const text = document.getElementById('inputText').value;
+            if (text.trim()) {
+                const words = text.split(' ');
+                words.forEach((word, index) => {
+                    if (index < 64) {
+                        const cell = document.querySelector(`[data-index="${index}"]`);
+                        cell.textContent = word;
+                        cell.classList.add('selected', 'glow');
+                        currentContent[index] = word;
+                    }
+                });
+            }
+        }
+
+        function resetAnalysis() {
+            const cells = document.querySelectorAll('.matrix-cell');
+            cells.forEach(cell => {
+                cell.classList.remove('selected', 'glow');
+                cell.textContent = '';
+            });
+            currentContent = new Array(64).fill('');
+            document.getElementById('analysisResults').innerHTML = '';
+            document.getElementById('inputText').value = '';
+        }
+
+        // تهيئة المصفوفة عند تحميل الصفحة
+        window.onload = initializeMatrix;
+    </script>
+</body>
+</html>
